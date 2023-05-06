@@ -26,7 +26,7 @@ class Message:
         self.timestamp = timestamp
         self.type = type
         self.text = text
-        self.sticker =
+        self.sticker = sticker
 
         # optional
         self.base64_attachments = base64_attachments
