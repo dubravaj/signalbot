@@ -158,12 +158,16 @@ class SignalBot:
         text: str,
         sticker: str = None,
         base64_attachments: list = None,
-	mentions: list = None,
+        mentions: list = None,
         listen: bool = False,
     ) -> int:
         resolved_receiver = self._resolve_receiver(receiver)
         resp = await self._signal.send(
-            resolved_receiver, text, sticker, base64_attachments=base64_attachments, mentions=mentions
+            resolved_receiver,
+            text,
+            sticker,
+            base64_attachments=base64_attachments,
+            mentions=mentions,
         )
         resp_payload = await resp.json()
         timestamp = resp_payload["timestamp"]
@@ -179,7 +183,7 @@ class SignalBot:
                     sticker=sticker,
                     base64_attachments=base64_attachments,
                     group=None,
-		    mentions=mentions,
+                    mentions=mentions,
                 )
             else:
                 sent_message = Message(
@@ -190,7 +194,7 @@ class SignalBot:
                     sticker=sticker,
                     base64_attachments=base64_attachments,
                     group=receiver,
-		    mentions=mentions,
+                    mentions=mentions,
                 )
             await self._ask_commands_to_handle(sent_message)
 
