@@ -33,8 +33,6 @@ class SignalAPI:
         uri = self._send_rest_uri()
         if base64_attachments is None:
             base64_attachments = []
-        if mentions is None:
-            mentions = list()
         payload = {
             "base64_attachments": base64_attachments,
             "message": message,
@@ -43,6 +41,9 @@ class SignalAPI:
             "sticker": sticker,
             "mentions": mentions,
         }
+        if mentions:  # Add mentions to the payload if they exist
+            payload["mentions"] = mentions
+
         try:
             async with aiohttp.ClientSession() as session:
                 resp = await session.post(uri, json=payload)
