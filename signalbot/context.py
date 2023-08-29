@@ -13,6 +13,7 @@ class Context:
         sticker: str = None,
         base64_attachments: list = None,
         listen: bool = False,
+        mentions: list = None,
     ):
         await self.bot.send(
             self.message.recipient(),
@@ -20,6 +21,7 @@ class Context:
             sticker=sticker,
             base64_attachments=base64_attachments,
             listen=listen,
+            mentions=mentions,
         )
 
     async def react(self, emoji: str):
