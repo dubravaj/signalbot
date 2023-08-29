@@ -91,25 +91,18 @@ class SignalBot:
             self.listenGroup(group_id, internal_id)
             return
 
-        logging.warning(
-            "[Bot] Can't listen for user/group because input does not look valid"
-        )
+        logging.warning("[Bot] Can't listen for user/group because input does not look valid")
 
     def listenUser(self, phone_number: str):
         if not self._is_phone_number(phone_number):
-            logging.warning(
-                "[Bot] Can't listen for user because phone number does not look valid"
-            )
+            logging.warning("[Bot] Can't listen for user because phone number does not look valid")
             return
 
         self.user_chats.add(phone_number)
 
     def listenGroup(self, group_id: str, internal_id: str):
         if not (self._is_group_id(group_id) and self._is_internal_id(internal_id)):
-            logging.warning(
-                "[Bot] Can't listen for group because group id and "
-                "internal id do not look valid"
-            )
+            logging.warning("[Bot] Can't listen for group because group id and " "internal id do not look valid")
             return
 
         self.group_chats[internal_id] = group_id
@@ -159,7 +152,6 @@ class SignalBot:
         text: str,
         sticker: str = None,
         base64_attachments: list = None,
-        mentions: list = None,
         listen: bool = False,
     ) -> int:
         resolved_receiver = self._resolve_receiver(receiver)
@@ -168,7 +160,6 @@ class SignalBot:
             text,
             sticker,
             base64_attachments=base64_attachments,
-            mentions=mentions,
         )
         resp_payload = await resp.json()
         timestamp = resp_payload["timestamp"]
@@ -184,7 +175,6 @@ class SignalBot:
                     sticker=sticker,
                     base64_attachments=base64_attachments,
                     group=None,
-                    mentions=mentions,
                 )
             else:
                 sent_message = Message(
@@ -195,7 +185,6 @@ class SignalBot:
                     sticker=sticker,
                     base64_attachments=base64_attachments,
                     group=receiver,
-                    mentions=mentions,
                 )
             await self._ask_commands_to_handle(sent_message)
 
@@ -227,8 +216,7 @@ class SignalBot:
             return group_id
 
         raise SignalBotError(
-            f"receiver {receiver} is not a phone number and not in self.group_chats. "
-            "This should never happen."
+            f"receiver {receiver} is not a phone number and not in self.group_chats. " "This should never happen."
         )
 
     # see https://stackoverflow.com/questions/55184226/catching-exceptions-in-individual-tasks-and-restarting-them

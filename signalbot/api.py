@@ -28,20 +28,16 @@ class SignalAPI:
         message: str,
         sticker: str = None,
         base64_attachments: list = None,
-        mentions: list = None,
     ) -> aiohttp.ClientResponse:
         uri = self._send_rest_uri()
         if base64_attachments is None:
             base64_attachments = []
-        if mentions is None:
-            mentions = list()
         payload = {
             "base64_attachments": base64_attachments,
             "message": message,
             "number": self.phone_number,
             "recipients": [receiver],
             "sticker": sticker,
-            "mentions": mentions,
         }
         try:
             async with aiohttp.ClientSession() as session:
@@ -55,9 +51,7 @@ class SignalAPI:
         ):
             raise SendMessageError
 
-    async def react(
-        self, recipient: str, reaction: str, target_author: str, timestamp: int
-    ) -> aiohttp.ClientResponse:
+    async def react(self, recipient: str, reaction: str, target_author: str, timestamp: int) -> aiohttp.ClientResponse:
         uri = self._react_rest_uri()
         payload = {
             "recipient": recipient,

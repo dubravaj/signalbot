@@ -18,7 +18,6 @@ class Message:
         base64_attachments: list = None,
         group: str = None,
         reaction: str = None,
-        mentions: list = None,
         raw_message: str = None,
     ):
         # required
@@ -36,10 +35,6 @@ class Message:
         self.group = group
 
         self.reaction = reaction
-
-        self.mentions = mentions
-        if self.mentions is None:
-            self.mentions = []
 
         self.raw_message = raw_message
 
@@ -69,15 +64,8 @@ class Message:
         if "syncMessage" in raw_message["envelope"]:
             type = MessageType.SYNC_MESSAGE
             text = cls._parse_sync_message(raw_message["envelope"]["syncMessage"])
-            group = cls._parse_group_information(
-                raw_message["envelope"]["syncMessage"]["sentMessage"]
-            )
-            reaction = cls._parse_reaction(
-                raw_message["envelope"]["syncMessage"]["sentMessage"]
-            )
-            mentions = cls._parse_mentions(
-                raw_message["envelope"]["syncMessage"]["sentMessage"]
-            )
+            group = cls._parse_group_information(raw_message["envelope"]["syncMessage"]["sentMessage"])
+            reaction = cls._parse_reaction(raw_message["envelope"]["syncMessage"]["sentMessage"])
 
         # Option 2: dataMessage
         elif "dataMessage" in raw_message["envelope"]:
@@ -85,7 +73,6 @@ class Message:
             text = cls._parse_data_message(raw_message["envelope"]["dataMessage"])
             group = cls._parse_group_information(raw_message["envelope"]["dataMessage"])
             reaction = cls._parse_reaction(raw_message["envelope"]["dataMessage"])
-            mentions = cls._parse_mentions(raw_message["envelope"]["dataMessage"])
 
         else:
             raise UnknownMessageFormatError
@@ -102,7 +89,6 @@ class Message:
             base64_attachments,
             group,
             reaction,
-            mentions,
             raw_message,
         )
 
