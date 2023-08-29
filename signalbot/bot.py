@@ -159,8 +159,8 @@ class SignalBot:
         text: str,
         sticker: str = None,
         base64_attachments: list = None,
-        mentions: list = None,
         listen: bool = False,
+        mentions: list = None,  # Added this line
     ) -> int:
         resolved_receiver = self._resolve_receiver(receiver)
         resp = await self._signal.send(
@@ -177,7 +177,7 @@ class SignalBot:
         if listen:
             if self._is_phone_number(receiver):
                 sent_message = Message(
-                    source=receiver,  # otherwise we can't respond in the right chat
+                    source=receiver,
                     timestamp=timestamp,
                     type=MessageType.SYNC_MESSAGE,
                     text=text,
@@ -188,7 +188,7 @@ class SignalBot:
                 )
             else:
                 sent_message = Message(
-                    source=self._phone_number,  # no need to pretend
+                    source=self._phone_number,
                     timestamp=timestamp,
                     type=MessageType.SYNC_MESSAGE,
                     text=text,
