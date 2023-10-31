@@ -54,6 +54,7 @@ class SignalAPI:
         if quote_timestamp:
             payload["quote_timestamp"] = quote_timestamp
 
+
         try:
             async with aiohttp.ClientSession() as session:
                 resp = await session.post(uri, json=payload)

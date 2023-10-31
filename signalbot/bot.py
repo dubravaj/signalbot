@@ -193,7 +193,6 @@ class SignalBot:
             quote_mentions=quote_mentions,
             quote_message=quote_message,
             quote_timestamp=quote_timestamp,
-            mentions=mentions,
         )
         resp_payload = await resp.json()
         timestamp = resp_payload["timestamp"]
