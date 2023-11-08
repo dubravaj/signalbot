@@ -28,6 +28,10 @@ class SignalAPI:
         message: str,
         sticker: str = None,
         base64_attachments: list = None,
+        quote_author: str = None,
+        quote_mentions: list = None,
+        quote_message: str = None,
+        quote_timestamp: str = None,
         mentions: list = None,
     ) -> aiohttp.ClientResponse:
         uri = self._send_rest_uri()
@@ -39,9 +43,17 @@ class SignalAPI:
             "number": self.phone_number,
             "recipients": [receiver],
             "sticker": sticker,
-            "mentions": mentions,
         }
-        if mentions:  # Add mentions to the payload if they exist
+
+        if quote_author:
+            payload["quote_author"] = quote_author
+        if quote_mentions:
+            payload["quote_mentions"] = quote_mentions
+        if quote_message:
+            payload["quote_message"] = quote_message
+        if quote_timestamp:
+            payload["quote_timestamp"] = quote_timestamp
+        if mentions:
             payload["mentions"] = mentions
 
         try:
@@ -109,6 +121,19 @@ class SignalAPI:
         ):
             raise StopTypingError
 
+    async def get_groups(self):
+        uri = self._groups_uri()
+        try:
+            async with aiohttp.ClientSession() as session:
+                resp = await session.get(uri)
+                resp.raise_for_status()
+                return await resp.json()
+        except (
+            aiohttp.ClientError,
+            aiohttp.http_exceptions.HttpProcessingError,
+        ):
+            raise GroupsError
+
     def _receive_ws_uri(self):
         return f"ws://{self.signal_service}/v1/receive/{self.phone_number}"
 
@@ -120,6 +145,9 @@ class SignalAPI:
 
     def _typing_indicator_uri(self):
         return f"http://{self.signal_service}/v1/typing-indicator/{self.phone_number}"
+
+    def _groups_uri(self):
+        return f"http://{self.signal_service}/v1/groups/{self.phone_number}"
 
 
 class ReceiveMessagesError(Exception):
@@ -143,4 +171,8 @@ class StopTypingError(TypingError):
 
 
 class ReactionError(Exception):
+    pass
+
+
+class GroupsError(Exception):
     pass
